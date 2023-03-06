@@ -7,8 +7,10 @@ import Footer from '@/components/Footer';
 
 import gamesFormat from '@/lib/gamesFormat';
 
+import { useState } from 'react';
+
 export default function Home({ games }) {
-	console.log(games);
+	const [page, setPage] = useState(1);
 
 	return (
 		<>
@@ -24,8 +26,8 @@ export default function Home({ games }) {
 			<main>
 				<Layout>
 					<Header />
-					<Cards games={games} />
-					<Footer />
+					<Cards games={games.slice(page * 12 - 12, page * 24 - page * 12)} />
+					<Footer setPage={setPage} page={page} />
 				</Layout>
 				<div className="h-16"></div>
 			</main>
@@ -34,14 +36,22 @@ export default function Home({ games }) {
 }
 
 export const getServerSideProps = async () => {
-	const key = process.env.API_KEY;
-	const games = await fetch(`https://api.rawg.io/api/games?key=${key}&page_size=12`)
-		.then((res) => res.json())
-		.then((res) => res.results)
-		.then((res) => gamesFormat(res))
-		.catch(() => null);
-
-	return {
-		props: { games },
-	};
+	try {
+		const pages = [1, 2, 3];
+		const promises = pages.map((page) =>
+			fetch(`https://api.rawg.io/api/games?key=${process.env.API_KEY}&page_size=40&page=${page}`)
+				.then((res) => res.json())
+				.then((data) => gamesFormat(data.results))
+		);
+		const gameLists = await Promise.all(promises);
+		const allGames = gameLists.flat();
+		return {
+			props: { games: allGames },
+		};
+	} catch (error) {
+		console.error(error);
+		return {
+			props: { games: [] },
+		};
+	}
 };

@@ -9,7 +9,6 @@ import { IoIosStarOutline, IoIosCalendar, IoIosArrowRoundBack } from 'react-icon
 import Link from 'next/link';
 
 export default function Game({ game }) {
-	console.log(game);
 	return (
 		<>
 			<Head>
@@ -23,8 +22,8 @@ export default function Game({ game }) {
 			</Head>
 			<main>
 				<Layout>
-					<div>
-						<div className="flex justify-between items-center mb-4 pt-8">
+					<div className="py-8">
+						<div className="flex justify-between items-center mb-4">
 							<div className="flex space-x-6 items-center text-gray-600">
 								<h1 className="text-2xl font-extrabold">{game.name}</h1>
 								<p className="flex items-center">
@@ -73,7 +72,6 @@ export default function Game({ game }) {
 							</div>
 						</div> */}
 					</div>
-					<div className="h-16" />
 				</Layout>
 			</main>
 		</>
