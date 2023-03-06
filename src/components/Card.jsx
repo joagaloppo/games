@@ -6,7 +6,7 @@ import { IoIosHeartEmpty, IoIosCalendar } from 'react-icons/io';
 export default function Card({ game }) {
 	return (
 		<div className="group md:hover:-translate-y-1 transition duration-300">
-			<Link href={`/game/${game.slug}`}>
+			<Link href={`/game/${game.id}`}>
 				<Image
 					src={game.img}
 					alt={game.name}
@@ -18,7 +18,7 @@ export default function Card({ game }) {
 
 			<div className="flex justify-between items-center mb-1 text-gray-600/80">
 				<Link
-					href={`/game/${game.slug}`}
+					href={`/game/${game.id}`}
 					className="flex-grow font-semibold max-w-[300px] truncate group-hover:underline underline-offset-4">
 					{game.name}
 				</Link>

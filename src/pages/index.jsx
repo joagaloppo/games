@@ -1,12 +1,13 @@
-import Cards from '@/components/Cards';
-import Layout from '@/components/Layout';
 import Head from 'next/head';
 
+import Header from '@/components/Header';
+import Layout from '@/components/Layout';
+import Cards from '@/components/Cards';
+import Footer from '@/components/Footer';
+
 import gamesFormat from '@/lib/gamesFormat';
-import { useState } from 'react';
 
 export default function Home({ games }) {
-	// const [games, setGames] = useState(games);
 	console.log(games);
 
 	return (
@@ -22,8 +23,11 @@ export default function Home({ games }) {
 			</Head>
 			<main>
 				<Layout>
+					<Header />
 					<Cards games={games} />
+					<Footer />
 				</Layout>
+				<div className="h-16"></div>
 			</main>
 		</>
 	);
@@ -31,7 +35,7 @@ export default function Home({ games }) {
 
 export const getServerSideProps = async () => {
 	const key = process.env.API_KEY;
-	const games = await fetch('https://api.rawg.io/api/games?key=' + key + '&page_size=12')
+	const games = await fetch(`https://api.rawg.io/api/games?key=${key}&page_size=12`)
 		.then((res) => res.json())
 		.then((res) => res.results)
 		.then((res) => gamesFormat(res))
