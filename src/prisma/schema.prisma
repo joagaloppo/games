@@ -1,0 +1,56 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Game {
+  id           Int            @id @default(autoincrement())
+  img          String
+  name         String
+  rating       Float
+  released     String
+  description  String
+  platforms    Platform[]     @relation("GamePlatform")
+  genres       Genre[]        @relation("GameGenre")
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  GameGenre    GameGenre[]
+  GamePlatform GamePlatform[]
+}
+
+model Genre {
+  id        Int         @id @default(autoincrement())
+  name      String
+  games     Game[]      @relation("GameGenre")
+  GameGenre GameGenre[]
+}
+
+model GameGenre {
+  id      Int   @id @default(autoincrement())
+  game    Game  @relation(fields: [gameId], references: [id])
+  gameId  Int
+  genre   Genre @relation(fields: [genreId], references: [id])
+  genreId Int
+}
+
+model Platform {
+  id           Int            @id @default(autoincrement())
+  name         String
+  games        Game[]         @relation("GamePlatform")
+  GamePlatform GamePlatform[]
+}
+
+model GamePlatform {
+  id         Int      @id @default(autoincrement())
+  game       Game     @relation(fields: [gameId], references: [id])
+  gameId     Int
+  platform   Platform @relation(fields: [platformId], references: [id])
+  platformId Int
+}

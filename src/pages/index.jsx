@@ -6,6 +6,7 @@ import Cards from '@/components/Cards';
 import Footer from '@/components/Footer';
 
 import gamesFormat from '@/lib/gamesFormat';
+import prisma from '../lib/prisma';
 
 import { useState } from 'react';
 
@@ -37,6 +38,14 @@ export default function Home({ games }) {
 
 export const getServerSideProps = async () => {
 	try {
+		const dbGames = await prisma.game.findMany({
+			select: {
+				id: true,
+				name: true,
+				released: true,
+			},
+		});
+
 		const pages = [1, 2, 3];
 		const promises = pages.map((page) =>
 			fetch(`https://api.rawg.io/api/games?key=${process.env.API_KEY}&page_size=40&page=${page}`)
@@ -46,7 +55,7 @@ export const getServerSideProps = async () => {
 		const gameLists = await Promise.all(promises);
 		const allGames = gameLists.flat();
 		return {
-			props: { games: allGames },
+			props: { games: [...dbGames, ...allGames] },
 		};
 	} catch (error) {
 		console.error(error);

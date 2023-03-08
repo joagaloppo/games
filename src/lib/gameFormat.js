@@ -11,6 +11,5 @@ export default function gameFormat(game) {
 		description: game.description,
 		platforms,
 		genres,
-		tags,
 	};
 }

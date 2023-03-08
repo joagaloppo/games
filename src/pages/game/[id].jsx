@@ -49,11 +49,14 @@ export default function Game({ game }) {
 							height="660"
 							className="w-[1024px] h-[600px] object-cover mb-4 mx-auto rounded"
 						/>
+
 						{/* <p className="text-gray-700 text-justify">{game.description}</p> */}
+
 						<div
 							className="text-justify text-gray-600"
 							dangerouslySetInnerHTML={{ __html: game.description }}
 						/>
+
 						{/* <div>
 							<div className="flex space-x-2">
 								{game.genres.map((genre, index) => (
@@ -63,11 +66,6 @@ export default function Game({ game }) {
 							<div className="flex space-x-2">
 								{game.platforms.map((platform, index) => (
 									<span key={index}>{platform}</span>
-								))}
-							</div>
-							<div className="flex space-x-2">
-								{game.tags.map((tag, index) => (
-									<span key={index}>{tag}</span>
 								))}
 							</div>
 						</div> */}
