@@ -4,11 +4,18 @@ import Layout from '@/components/Layout';
 import moment from 'moment';
 
 import gameFormat from '@/lib/gameFormat';
+import prisma from '@/lib/prisma';
 
 import { IoIosStarOutline, IoIosCalendar, IoIosArrowRoundBack } from 'react-icons/io';
 import Link from 'next/link';
 
+import { useEffect } from 'react';
+
 export default function Game({ game }) {
+	useEffect(() => {
+		console.log(game);
+	});
+
 	return (
 		<>
 			<Head>
@@ -42,11 +49,11 @@ export default function Game({ game }) {
 								</Link>
 							</div>
 						</div>
-						<Image
+						<img
 							src={game.img}
 							alt={game.name}
-							width="990"
-							height="660"
+							// width="990"
+							// height="660"
 							className="w-[1024px] h-[600px] object-cover mb-4 mx-auto rounded"
 						/>
 
@@ -77,14 +84,39 @@ export default function Game({ game }) {
 }
 
 export const getServerSideProps = async (context) => {
-	const id = Number(context.params.id);
-	const key = process.env.API_KEY;
-	const game = await fetch(`https://api.rawg.io/api/games/${id}?key=${key}`)
-		.then((res) => res.json())
-		.then((res) => gameFormat(res))
-		.catch(() => null);
+	const db = context.params.id.toString().startsWith('I');
+	const id = db ? Number(context.params.id.slice(1)) : context.params.id;
 
-	return {
-		props: { game },
-	};
+	console.log('DB: ', db);
+
+	// If id starts with "I" fetch from the db
+	// Else fetch from the rawg.io api
+
+	if (db) {
+		const game = await prisma.game.findUnique({
+			where: { id },
+			select: {
+				id: true,
+				img: true,
+				name: true,
+				rating: true,
+				released: true,
+				description: true,
+				genres: true,
+				platforms: true,
+			},
+		});
+		return {
+			props: { game },
+		};
+	} else {
+		const key = process.env.API_KEY;
+		const game = await fetch(`https://api.rawg.io/api/games/${id}?key=${key}`)
+			.then((res) => res.json())
+			.catch(() => null);
+
+		return {
+			props: { game: gameFormat(game) },
+		};
+	}
 };
