@@ -5,13 +5,19 @@ import Layout from '@/components/Layout';
 import Cards from '@/components/Cards';
 import Footer from '@/components/Footer';
 
-import gamesFormat from '@/lib/gamesFormat';
 import prisma from '../lib/prisma';
 
 import { useState } from 'react';
 
 export default function Home({ games }) {
 	const [page, setPage] = useState(1);
+	const maxPage = Math.ceil(games.length / 12);
+	const changePage = (page) => {
+		const maxPage = Math.ceil(games.length / 12);
+		if (page < 1) page = 1;
+		if (page > maxPage) page = maxPage;
+		return setPage(page);
+	};
 
 	return (
 		<>
@@ -28,7 +34,7 @@ export default function Home({ games }) {
 				<Layout>
 					<Header />
 					<Cards games={games.slice(page * 12 - 12, page * 24 - page * 12)} />
-					<Footer setPage={setPage} page={page} />
+					<Footer page={page} changePage={changePage} maxPage={maxPage} />
 				</Layout>
 				<div className="h-16"></div>
 			</main>
@@ -41,21 +47,15 @@ export const getServerSideProps = async () => {
 		const dbGames = await prisma.game.findMany({
 			select: {
 				id: true,
+				img: true,
 				name: true,
+				origin: true,
 				released: true,
 			},
 		});
 
-		const pages = [1, 2, 3];
-		const promises = pages.map((page) =>
-			fetch(`https://api.rawg.io/api/games?key=${process.env.API_KEY}&page_size=40&page=${page}`)
-				.then((res) => res.json())
-				.then((data) => gamesFormat(data.results))
-		);
-		const gameLists = await Promise.all(promises);
-		const allGames = gameLists.flat();
 		return {
-			props: { games: [...dbGames, ...allGames] },
+			props: { games: [...dbGames] },
 		};
 	} catch (error) {
 		console.error(error);
