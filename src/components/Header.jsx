@@ -1,34 +1,43 @@
 import Link from 'next/link';
 import SearchBar from './SearchBar';
-import { BiGame } from 'react-icons/bi';
-import { IoMdAddCircleOutline } from 'react-icons/io';
-import { IoIosArrowDown } from 'react-icons/io';
+import Select from './Select';
 
-export default function Header() {
+import { IoIosAdd } from 'react-icons/io';
+
+export default function Header({ genres }) {
+	const origins = [
+		{ id: 0, name: 'Filter by origin' },
+		{ id: 1, name: 'From the API' },
+		{ id: 2, name: 'User created' },
+	];
+
+	const rating = [
+		{ id: 0, name: 'Sort by rating' },
+		{ id: 1, name: 'Ascending (0 - 10)' },
+		{ id: 2, name: 'Descending (10 - 0)' },
+	];
+
+	const alphabet = [
+		{ id: 0, name: 'Sort by alphabet' },
+		{ id: 1, name: 'Ascending (A - Z)' },
+		{ id: 2, name: 'Descending (Z - A)' },
+	];
+
 	return (
-		<div className="flex flex-col items-center justify-center">
-			<div className="flex space-x-16 py-6 items-center w-full">
-				<Link href="/">
-					<BiGame className="h-8 w-auto text-gray-300 hover:-rotate-45 hover:text-gray-400 transition duration-300 cursor-pointer	" />
-				</Link>
+		<div className="flex flex-col items-center justify-center pb-8">
+			<div className="flex w-full items-center gap-2 py-6 sm:gap-4">
 				<SearchBar />
-				<Link href="/">
-					<IoMdAddCircleOutline className="h-8 w-auto text-gray-300 hover:text-gray-400 transition duration-300 cursor-pointer" />
+				<Link href="/create">
+					<button className="flex h-12 w-12 items-center justify-center border text-gray-400 transition duration-300 ease-in-out hover:border-gray-400 hover:bg-gray-50 hover:text-gray-500">
+						<IoIosAdd className="h-6 w-auto" />
+					</button>
 				</Link>
 			</div>
-			<div className="flex space-x-4 pb-12">
-				<span className="flex items-center text-sm text-gray-400 px-11 h-10 border rounded hover:bg-gray-100 hover:text-gray-500 hover:border-gray-300 transition cursor-pointer">
-					Sort A - Z <IoIosArrowDown className="h-3 w-auto ml-2" />
-				</span>
-				<span className="flex items-center text-sm text-gray-400 px-11 h-10 border rounded hover:bg-gray-100 hover:text-gray-500 hover:border-gray-300 transition cursor-pointer">
-					Sort by rating <IoIosArrowDown className="h-3 w-auto ml-2" />
-				</span>
-				<span className="flex items-center text-sm text-gray-400 px-11 h-10 border rounded hover:bg-gray-100 hover:text-gray-500 hover:border-gray-300 transition cursor-pointer">
-					Filter by origin <IoIosArrowDown className="h-3 w-auto ml-2" />
-				</span>
-				<span className="flex items-center text-sm text-gray-400 px-11 h-10 border rounded hover:bg-gray-100 hover:text-gray-500 hover:border-gray-300 transition cursor-pointer">
-					Filter by genre <IoIosArrowDown className="h-3 w-auto ml-2" />
-				</span>
+			<div className="flex w-full flex-col gap-4 md:flex-row">
+				<Select options={[...alphabet]} />
+				<Select options={[...rating]} />
+				<Select options={[...origins]} />
+				<Select options={[{ id: 0, name: 'Filter by genre' }, ...genres]} />
 			</div>
 		</div>
 	);

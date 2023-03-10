@@ -3,13 +3,13 @@ import Head from 'next/head';
 import Header from '@/components/Header';
 import Layout from '@/components/Layout';
 import Cards from '@/components/Cards';
-import Footer from '@/components/Footer';
+import Pagination from '@/components/Pagination';
 
-import prisma from '../lib/prisma';
+import prisma from '@/lib/prisma';
 
 import { useState } from 'react';
 
-export default function Home({ games }) {
+export default function Home({ games, genres }) {
 	const [page, setPage] = useState(1);
 	const maxPage = Math.ceil(games.length / 12);
 	const changePage = (page) => {
@@ -32,11 +32,10 @@ export default function Home({ games }) {
 			</Head>
 			<main>
 				<Layout>
-					<Header />
+					<Header genres={genres} />
 					<Cards games={games.slice(page * 12 - 12, page * 24 - page * 12)} />
-					<Footer page={page} changePage={changePage} maxPage={maxPage} />
+					<Pagination page={page} changePage={changePage} maxPage={maxPage} />
 				</Layout>
-				<div className="h-16"></div>
 			</main>
 		</>
 	);
@@ -54,8 +53,15 @@ export const getServerSideProps = async () => {
 			},
 		});
 
+		const genres = await prisma.genre.findMany({
+			select: {
+				id: true,
+				name: true,
+			},
+		});
+
 		return {
-			props: { games: [...dbGames] },
+			props: { games: [...dbGames], genres: [...genres] },
 		};
 	} catch (error) {
 		console.error(error);

@@ -15,14 +15,16 @@ export default function SearchBar() {
 		<div className="flex-grow">
 			<form className="group flex flex-row" onSubmit={(e) => handleSubmit(e)}>
 				<input
-					className="bg-white border border-gray-200 h-10 px-4 placeholder-gray-400 w-full text-sm text-gray-800 rounded-l focus:outline-none transition duration-300 focus:border-gray-300 focus:bg-gray-100/25 focus:placeholder-gray-500"
+					className="text-md h-12 w-full border border-gray-200 bg-white px-4 text-gray-600 placeholder-gray-500 transition duration-300 ease-in-out focus:border-gray-400 focus:placeholder-gray-500 focus:outline-none"
 					type="text"
 					placeholder="Search for a game..."
 					value={input}
 					onChange={(e) => setInput(e.target.value)}
 				/>
-				<button className="flex items-center justify-center h-10 w-12 border border-l-0 border-gray-200 rounded-r">
-					<IoIosSearch className="h-5 w-auto text-gray-400" />
+				<button
+					type="submit"
+					className="flex h-12 w-14 items-center justify-center border border-gray-200 text-gray-400 transition duration-300 ease-in-out hover:border-gray-400 hover:bg-gray-50 hover:text-gray-600 sm:w-20">
+					<IoIosSearch className="h-6 w-auto" />
 				</button>
 			</form>
 		</div>

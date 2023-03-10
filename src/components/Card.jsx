@@ -7,42 +7,38 @@ export default function Card({ game }) {
 	const link = game.origin === 'api' ? `/game/${game.id}` : `/game/I${game.id}`;
 
 	return (
-		<div className="group md:hover:-translate-y-1 transition duration-300">
+		<div className="group transition duration-300 lg:hover:-translate-y-1">
 			<Link href={link}>
-				<img
-					src={game.img}
-					alt={game.name}
-					// width="330"
-					// height="220"
-					className="bg-gray-100 w-[320px] h-[180px] object-cover mb-2 rounded-lg"
-				/>
+				{game.origin === 'database' ? (
+					<img
+						src={game.img}
+						alt={game.name}
+						width="640"
+						height="360"
+						className="mb-2 aspect-video h-auto bg-gray-100 object-cover"
+					/>
+				) : (
+					<Image
+						src={game.img}
+						alt={game.name}
+						width="640"
+						height="360"
+						className="mb-2 aspect-video h-auto bg-gray-100 object-cover"
+					/>
+				)}
 			</Link>
 
-			<div className="flex justify-between items-center mb-1 text-gray-600/80">
-				<Link
-					href={link}
-					className="flex-grow font-semibold max-w-[300px] truncate group-hover:underline underline-offset-4">
+			<div className="mb-1 flex items-center justify-between text-gray-600">
+				<Link href={link} className="max-w-[300px] flex-grow truncate font-semibold">
 					{game.name}
 				</Link>
-				<IoIosHeartEmpty className="text-lg fill-gray-500/80 hover:fill-red-500 transition hover:cursor-pointer" />
+				<IoIosHeartEmpty className="fill-gray-500 text-lg transition hover:cursor-pointer hover:fill-red-500" />
 			</div>
 
-			<div className="mb-2 flex items-center text-gray-600/80 cursor-default">
+			<div className="flex w-full items-center gap-2 text-gray-600">
 				<IoIosCalendar />
-				<span className="text-sm font-light max-w-[300px] truncate ml-2">
-					{moment(game.released).format('MMMM DD, YYYY')}
-				</span>
+				<span className="cursor-default truncate text-sm">{moment(game.released).format('MMMM DD, YYYY')}</span>
 			</div>
-
-			{/* <div className="flex space-x-2 max-w-[320px] overflow-hidden truncate">
-				{game.genres.map((genre, index) => (
-					<span
-						key={index}
-						className="px-3 py-0.5 bg-gray-500/80 text-white rounded-full text-xs cursor-default">
-						{genre}
-					</span>
-				))}
-			</div> */}
 		</div>
 	);
 }

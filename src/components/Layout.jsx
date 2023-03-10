@@ -1,6 +1,6 @@
 export default function Layout({ children }) {
 	return (
-		<div className="max-w-screen-lg mx-auto">
+		<div className="mx-auto box-content flex max-w-screen-xl px-2 md:px-4">
 			<div>{children}</div>
 		</div>
 	);
